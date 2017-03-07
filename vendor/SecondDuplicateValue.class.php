@@ -73,18 +73,17 @@ class SecondDuplicateValue
 
 
     public function getPositionNotTwo($positionMinZero) {
-        echo '<h4>'.$this->getMin().'</h4>';
+        echo '<h4>min first value : '.$this->getMin().'</h4>';
 
         if (array_count_values($this->getMinArr())[$this->getMin()] === 1) {
             // ไม่ซ้ำกัน
             echo '<h4>ไม่ซ้ำกันแล้ว</h4>';
             $positionMinZero = $positionMinZero[$this->getMinIndex()];
-            echo '[ '.$positionMinZero["row"]. ':'.$positionMinZero["column"].' ]';
 
         } else {
             // ซ้ำกัน
             $positionMinZero = $positionMinZero[0];
-            echo '[ '.$positionMinZero["row"]. ':'.$positionMinZero["column"].' ]';
+//            echo '[ '.$positionMinZero["row"]. ':'.$positionMinZero["column"].' ]';
         }
         return $positionMinZero;
     }

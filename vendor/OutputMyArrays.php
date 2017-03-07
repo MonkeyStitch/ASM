@@ -31,10 +31,15 @@ class OutputMyArrays
         if ($arr !== null) {
             $this->arr = $arr;
         }
-        echo '<h4>'.$text.'</h4>';
+
+        if (is_array($arr)) {
+            echo '<h4>'.$text.'</h4>';
+        }
 
 
-        if (is_array($this->arr) && count($this->arr) && is_array($this->arr[0])) {
+        if (!is_array($arr)) {
+            echo '<h4>'.$text.' : '. $arr .'</h4>';
+        } else if (is_array($this->arr) && count($this->arr) && is_array($this->arr[0])) {
             foreach ($this->arr as $value) {
                 if (is_array($value)) {
                     echo '[ ';
@@ -52,7 +57,7 @@ class OutputMyArrays
         } else {
             echo '[ ';
             foreach ($this->arr as $value) {
-                printf('%3s' ,$value . ' ');
+                printf('%4s' ,$value . ' ');
             }
             echo ' ]';
         }

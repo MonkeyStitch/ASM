@@ -25,7 +25,8 @@ include_once (__DIR__.'/Process1.php');
 $supply = $_POST['supply'];
 $demand = $_POST['demand'];
 //$process = new ProcessASM($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
-$process = new Process1($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
+//$process = new Process1($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
+$process = new TheNewProcessASM($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
 
 $show = $process->output();
 //$process1->output();

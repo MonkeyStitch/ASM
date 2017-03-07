@@ -51,13 +51,26 @@ class ProcessPositionSelect
 
     public function process($output) {
         echo '<h4>supply over demand</h4>';
-        echo $this->dm->getSupply($this->r) . ' > ' . $this->dm->getDemand($this->c);
+        echo $this->dm->getSupply($this->r) . ' >= ' . $this->dm->getDemand($this->c);
 
         // เช็คค่า supply กับ demand ตรงที่ตำแหน่งค่าที่น้อยที่สุดอยู่
-        if ($this->isSupplyOverDemand()) {
+        if($this->isEqual()){
+            // supply > demand
+            echo ' : equal';
+            // เอาค่า demand มาใส่ตรงที่ค่าน้อยจากตำแหน่งผลบวกของ 0
+            $output[$this->r][$this->c] = $this->dm->getDemand($this->c);
+
+            // แทนค่า
+            $this->dm->setSupply($this->r, 0);
+            $this->dm->setDemand($this->c, 0);
+
+            $this->block->addRow($this->r);
+            $this->block->addColumn($this->c);
+
+        } else if ($this->isSupplyOverDemand()) {
             // supply > demand
             echo ' : true';
-            // เอาค่า supply มาใส่ตรงที่ค่าน้อยจากตำแหน่งผลบวกของ 0
+            // เอาค่า demand มาใส่ตรงที่ค่าน้อยจากตำแหน่งผลบวกของ 0
             $output[$this->r][$this->c] = $this->dm->getDemand($this->c);
             // ลบค่า
             $this->dm->setSupply($this->r, $this->dm->getSupply($this->r) - $this->dm->getDemand($this->c));
@@ -65,7 +78,6 @@ class ProcessPositionSelect
 
             // แถว หรือ คอลัมน์ ใดที่เป็น 0 จะไม่นำมาคิดต่อไป
             $this->block->addColumn($this->c);
-            $this->addRowCol($this->r, $this->c);
         } else {
             // demand > supply
             echo ' : false';
@@ -77,14 +89,16 @@ class ProcessPositionSelect
 
             // แถว หรือ คอลัมน์ ใดที่เป็น 0 จะไม่นำมาคิดต่อไป
             $this->block->addRow($this->r);
-            $this->addRowCol($this->r, $this->c);
-
         }
         return $output;
     }
 
     private function isSupplyOverDemand() {
         return $this->dm->getSupply($this->r) > $this->dm->getDemand($this->c);
+    }
+
+    private function isEqual() {
+        return $this->dm->getSupply($this->r) === $this->dm->getDemand($this->c);
     }
 
     private function addRowCol($row, $column) {

@@ -21,11 +21,6 @@ class TheNewProcessASM
     private $second;
     private $select;
 
-    private $positionZero = [];
-    private $positionZeroTranspose = [];
-
-    private $zeroValueArray = [];
-
     private $positionMinZero = []; // row => 0, column => 0
 
 
@@ -68,18 +63,16 @@ class TheNewProcessASM
 
 
     private function clear() {
-        $this->zeroValueArray = [];
         $this->positionMinZero = []; // row => 0, column => 0
-
     }
 
     public function output() {
 
-
-//        while (!$this->DeAndSup->isDemandOrSupplyEqualZero()) {
-       for ($i = 1; $i <= 3; $i++) {
+$i = 1;
+        while (!$this->DeAndSup->isDemandOrSupplyEqualZero()) {
+//       for ($i = 1; $i <= 9; $i++) {
             echo '<h2>'.$i.'</h2>';
-
+$i++;
             echo 'sum->demand :: '.array_sum($this->DeAndSup->getDemand()) . ' === 0  := ';
             echo array_sum($this->DeAndSup->getDemand()) === 0 ? 'true' : 'false';
             echo '<br>';
@@ -97,17 +90,19 @@ class TheNewProcessASM
            $this->show->show('demand ', $this->DeAndSup->getDemand());
            $this->show->show('input ', $this->outputDS);
 
-
+echo '<br>';
            // set value in CheckZero
            $this->checkZero->setArr($this->outputDS);
            $this->checkZero->setBlock($this->block);
 
+
            // check zero if not zero all
             if (!$this->checkZero->isCheck()) {
                 echo '<br> check zero all is false';
+                $this->show->show('input ', $this->inputDS);
 
                 // clear value
-                $this->minDelete->setArr($this->outputDS);
+                $this->minDelete->setArr($this->inputDS);
 
                 // ฟังชั่น ลบข้อมูล จากการหาค่าน้อยสุดในแต่ละแถว และคอลัมน์
                 $this->outputDS = $this->minDelete->getOutput();
@@ -159,79 +154,48 @@ class TheNewProcessASM
                 $this->firstDup->setPositionZero($this->positionMinZero);
                 $this->firstDup->process();
 
-                $this->show->show('sum without : row ',$this->firstDup->getSumWithOutZeroRowArr());
-                $this->show->show('sum without : column ',$this->firstDup->getSumWithOutZeroColumnArr());
-
-                $this->show->show('new value min  : sum without zero ',$this->firstDup->getsumWithOutZero());
-
-
                 // is check sum without zero
                 $checkSumWithOut = new CheckSumWithOut($this->firstDup->getValueArr());
+                $this->show->show('sum value without zero and position zero',$this->firstDup->getValueArr());
+
 
                 if ($checkSumWithOut->isMaxValue()) {
                     // ไม่ซ้ำกันอีก
                     echo '<h4>ไม่ซ้ำกันแล้ว</h4>';
+                    $this->show->show('Max Value', $checkSumWithOut->getMax());
 
-                    foreach ($this->positionMinZero as $value) {
-                        if ($this->outputDS[$value['row']][$value['column']] === $checkSumWithOut->getMax()) {
-                            $positionMinZero = $value;
-                        }
-                    }
+                    $this->positionMinZero = $this->firstDup->getPositionMaxValue($checkSumWithOut->getMax());
+
                 } else {
 
                     // ถ้าซ้ำกันอีก ให้กลับไปดูที่ค่ารับเข้าในแต่ละรอบ
                     echo '<h4>ซ้ำกันแล้ว</h4>';
+
                     $this->second->setFirstData($this->inputDS);
                     $this->second->setBlock($this->block);
-
                     $this->second->findMinValue($this->positionMinZero);
 
 
                     // ตรวจสอบว่าเหลือ 2 ค่าหรือไม่
                     if ($this->block->isTwoValue($this->row, $this->column)) {
-                        echo '<h4>2x2</h4>';
-
+                        echo '<h4>ตรวจสอบว่าเหลือ 2 ค่าหรือไม่</h4>';
 
                         $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMin());
 
                     } else {
                         // ตรวจสอบค่ารับเข้าในแต่ละรอบซ้ำกันหรือไม่
-
+                        echo '<h4>ยังเหลือมากกว่า 2 ค่า</h4>';
                         $this->positionMinZero = $this->second->getPositionNotTwo($this->positionMinZero);
                     }
                 }
 
 
                 // คือค่าเพื่อลบ supply กับ demand
-                $this->select->setPositionMinZero($this->positionMinZero);
-                $this->select->setDm($this->DeAndSup);
-                $this->select->setBlock($this->block);
-                $this->output = $this->select->process($this->output);
-
-                $this->show->show('output ', $this->output);
-                $this->show->show('output show ', $this->outputDS);
-
-                $this->show->show('supply ', $this->DeAndSup->getSupply());
-                $this->show->show('demand ', $this->DeAndSup->getDemand());
-                $this->show->show('do not think row ', $this->block->getRowBlock());
-                $this->show->show('do not think column ', $this->block->getColumnBlock());
+                $this->supplyAndDemand();
 
             } else {
                 echo '<h4># Not Duplicate Value</h4>';
-                echo '[ '.$this->positionMinZero["row"]. ':'.$this->positionMinZero["column"].' ]';
-                // ถ้ามีแค่ 1 ค่า ทำในนี้
-                // คือค่าเพื่อลบ supply กับ demand
-                $this->select->setPositionMinZero($this->positionMinZero);
-                $this->select->setDm($this->DeAndSup);
-                $this->select->setBlock($this->block);
-                $this->output = $this->select->process($this->output);
-
-                $this->show->show('output ', $this->output);
-                $this->show->show('output show ', $this->outputDS);
-                $this->show->show('supply ', $this->DeAndSup->getSupply());
-                $this->show->show('demand ', $this->DeAndSup->getDemand());
-                $this->show->show('do not think row ', $this->block->getRowBlock());
-                $this->show->show('do not think column ', $this->block->getColumnBlock());
+                $this->supplyAndDemand();
             }
 
             echo '<hr>';
@@ -241,5 +205,23 @@ class TheNewProcessASM
         return $this->output;
     }
 
+
+    private function supplyAndDemand()
+    {
+        echo '[ '.$this->positionMinZero["row"]. ':'.$this->positionMinZero["column"].' ]';
+        // ถ้ามีแค่ 1 ค่า ทำในนี้
+        // คือค่าเพื่อลบ supply กับ demand
+        $this->select->setPositionMinZero($this->positionMinZero);
+        $this->select->setDm($this->DeAndSup);
+        $this->select->setBlock($this->block);
+        $this->output = $this->select->process($this->output);
+
+        $this->show->show('output ', $this->output);
+        $this->show->show('output show ', $this->outputDS);
+        $this->show->show('supply ', $this->DeAndSup->getSupply());
+        $this->show->show('demand ', $this->DeAndSup->getDemand());
+        $this->show->show('do not think row ', $this->block->getRowBlock());
+        $this->show->show('do not think column ', $this->block->getColumnBlock());
+    }
 
 }

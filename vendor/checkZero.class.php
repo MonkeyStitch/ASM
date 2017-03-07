@@ -5,9 +5,8 @@ class CheckZero
 {
 
     private $arr;
-    private $rowArr = array(); // data type boolean
-    private $colArr = array(); // data type boolean
     private $block;
+    private $process;
 
 
     public function __construct(array $arr = null,  BlockRCClass $blockRCClass = null)
@@ -39,64 +38,49 @@ class CheckZero
 
 
     public function isCheck() {
-        $this->process();
+        $this->process = Library::processSubArr($this->arr, $this->block);
+        $show = new OutputMyArrays();
+
+        echo '<h4>matrix</h4>';
+        print_r($this->process);
+
+        echo '*** ';
+        var_dump($this->PRow());
+        echo '*** ';
+        var_dump($this->PColumn());
+
+
         return $this->isZeroAll();
     }
 
 
-
-    /**
-     * @return array
-     */
-    public function getRow($index = null)
+    private function PRow()
     {
-        if ($index === null) {
-            return $this->rowArr;
+        $arr = $this->process;
+        $bool = true;
+        foreach ($arr as $item => $value) {
+            $min = @min($value);
+            $bool &= ($min === 0);
         }
-        return $this->rowArr[$index];
+        return $bool;
     }
 
-    /**
-     * @return array
-     */
-    public function getColumn($index = null)
+    private function PColumn()
     {
-        if ($index === null) {
-            return $this->colArr;
+        $arr = Transpose::transpose($this->process);
+        $bool = true;
+        foreach ($arr as $item => $value) {
+            $min = @min($value);
+            $bool &= ($min === 0);
         }
-        return $this->colArr[$index];
-    }
-
-
-
-    // true is 0
-    private function process() {
-        $this->rowArr = array();
-        $this->colArr = array();
-
-        foreach ($this->arr as $item => $value) {
-            if (@min($value) === 0) {
-                $this->rowArr[$item] = true;
-            } else {
-                $this->rowArr[$item] = false;
-            }
-        }
-        unset($item, $value);
-
-
-        foreach (Transpose::transpose($this->arr) as $item => $value) {
-            if (@min($value) === 0) {
-                $this->colArr[$item] = true;
-            } else {
-                $this->colArr[$item] = false;
-
-            }
-        }
-        unset($item, $value);
+        return $bool;
     }
 
     private function isZeroAll() {
-        return !(in_array(false, $this->rowArr, true) && in_array(false, $this->colArr, true));
+
+        return $this->PRow() && $this->PColumn();
     }
+
+
 
 }

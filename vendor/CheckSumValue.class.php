@@ -33,6 +33,7 @@ class CheckSumValue
     }
 
     public function isZeroValueMinMoreFirst() {
+        $this->positionMinZero = [];
         $min = @min($this->zeroValueArray);
         echo '<h4>min value : '. $min . '</h4>';
         $countValue = array_count_values($this->zeroValueArray);

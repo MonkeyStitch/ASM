@@ -27,6 +27,17 @@ class BlockRCClass implements BlockRC
         $this->rowBlock = $rowArr;
     }
 
+
+    public function findRow($id)
+    {
+        return in_array($id, $this->rowBlock, true);
+    }
+
+    public function findColumn($id)
+    {
+        return in_array($id, $this->columnBlock, true);
+    }
+
     public function getRowBlock($index = null)
     {
         if (null === $index) {

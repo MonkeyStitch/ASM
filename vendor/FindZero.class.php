@@ -64,7 +64,7 @@ class FindZero
      */
     public function getPositionTranspose()
     {
-        return $this->findZero($this->arrTranspose);
+        return $this->findZero($this->arrTranspose, true);
     }
 
 

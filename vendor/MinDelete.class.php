@@ -31,6 +31,8 @@ class MinDelete
 
 
     public function getOutput() {
+        $this->minRowArr = [];
+        $this->minColumnArr = [];
         // process
 
         // row
