@@ -50,13 +50,10 @@ class ProcessPositionSelect
 
 
     public function process($output) {
-        echo '<h4>supply over demand</h4>';
-        echo $this->dm->getSupply($this->r) . ' >= ' . $this->dm->getDemand($this->c);
 
         // เช็คค่า supply กับ demand ตรงที่ตำแหน่งค่าที่น้อยที่สุดอยู่
         if($this->isEqual()){
             // supply > demand
-            echo ' : equal';
             // เอาค่า demand มาใส่ตรงที่ค่าน้อยจากตำแหน่งผลบวกของ 0
             $output[$this->r][$this->c] = $this->dm->getDemand($this->c);
 
@@ -69,7 +66,6 @@ class ProcessPositionSelect
 
         } else if ($this->isSupplyOverDemand()) {
             // supply > demand
-            echo ' : true';
             // เอาค่า demand มาใส่ตรงที่ค่าน้อยจากตำแหน่งผลบวกของ 0
             $output[$this->r][$this->c] = $this->dm->getDemand($this->c);
             // ลบค่า
@@ -80,7 +76,6 @@ class ProcessPositionSelect
             $this->block->addColumn($this->c);
         } else {
             // demand > supply
-            echo ' : false';
             // เอาค่า supply มาใส่ตรงที่ค่าน้อยจากตำแหน่งผลบวกของ 0
             $output[$this->r][$this->c] = $this->dm->getSupply($this->r);
             // ลบค่า

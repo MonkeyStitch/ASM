@@ -1,7 +1,7 @@
 <?php
 
 
-class TheNewProcessASM
+class ProcessASM
 {
     private $row = 0;
     private $column = 0;
@@ -68,29 +68,11 @@ class TheNewProcessASM
 
     public function output() {
 
-$i = 1;
         while (!$this->DeAndSup->isDemandOrSupplyEqualZero()) {
-//       for ($i = 1; $i <= 9; $i++) {
-            echo '<h2>'.$i.'</h2>';
-$i++;
-            echo 'sum->demand :: '.array_sum($this->DeAndSup->getDemand()) . ' === 0  := ';
-            echo array_sum($this->DeAndSup->getDemand()) === 0 ? 'true' : 'false';
-            echo '<br>';
-            echo 'sum->supply :: '.array_sum($this->DeAndSup->getSupply()) . ' === 0  := ';
-            echo  array_sum($this->DeAndSup->getSupply()) === 0 ? 'true' : 'false';
-            echo '<br>demand || supply := ';
-            echo ( (array_sum($this->DeAndSup->getDemand()) === 0) || (array_sum($this->DeAndSup->getSupply()) === 0) ) ? 'true' : 'false';
-
 
            // clear value
            $this->clear();
 
-           // show
-           $this->show->show('supply ', $this->DeAndSup->getSupply());
-           $this->show->show('demand ', $this->DeAndSup->getDemand());
-           $this->show->show('input ', $this->outputDS);
-
-echo '<br>';
            // set value in CheckZero
            $this->checkZero->setArr($this->outputDS);
            $this->checkZero->setBlock($this->block);
@@ -98,8 +80,6 @@ echo '<br>';
 
            // check zero if not zero all
             if (!$this->checkZero->isCheck()) {
-                echo '<br> check zero all is false';
-                $this->show->show('input ', $this->inputDS);
 
                 // clear value
                 $this->minDelete->setArr($this->inputDS);
@@ -111,23 +91,12 @@ echo '<br>';
             // ตำแหน่งของ 0
            $this->find->setArr($this->outputDS);
            $this->find->setBlock($this->block);
-           $this->show->show('position zero',$this->find->getPosition());
-           $this->show->show('position transpose zero ',$this->find->getPositionTranspose());
 
-
-            // นับจำนวน 0 ใน แถว และคอลัมน์
-            $this->show->show('count zero : row ',$this->find->count('row'));
-            $this->show->show('count zero : col ',$this->find->count('column'));
-
-
-           $this->show->show('delete value (old):  ',$this->outputDS);
 
            // รวมผล 0 จาก แถวและคอลัมน์
            $this->sum->setArr($this->outputDS);
            $this->sum->setFindZero($this->find);
 
-           $sumZero = $this->sum->getSumOutput();
-           $this->show->show('sum zero : ',$sumZero);
 
            // check sum zero
            $this->checkSum->setSumZero($this->sum);
@@ -139,13 +108,10 @@ echo '<br>';
             // เช็คค่าที่บวกมีค่าที่ซ้ำหรือไม่
             if ($checkValue) {
                 // ถ้ามากกว่า 1 ตัวทำในฟังชั่นนี้
-                echo '<h4>มีค่าซ้ำ</h4>';
 
                 // เรียกฟังชั่นสำหรับคำนวณค่าที่ซ้ำกัน
                 $this->positionMinZero = $this->checkSum->getPositionMinZero();
-                $this->show->show('min value for more first : ', $this->positionMinZero);
 
-                echo '<h4>ถ้ามากกว่า 1 ตัวทำในฟังชั่นนี้</h4>';
 
                 // First Duplicate Value
                 $this->firstDup->setAsmFirst($this->outputDS);
@@ -156,60 +122,44 @@ echo '<br>';
 
                 // is check sum without zero
                 $checkSumWithOut = new CheckSumWithOut($this->firstDup->getValueArr());
-                $this->show->show('sum value without zero and position zero',$this->firstDup->getValueArr());
-
 
                 if ($checkSumWithOut->isMaxValue()) {
                     // ไม่ซ้ำกันอีก
-                    echo '<h4>ไม่ซ้ำกันแล้ว</h4>';
-                    $this->show->show('Max Value', $checkSumWithOut->getMax());
-
                     $this->positionMinZero = $this->firstDup->getPositionMaxValue($checkSumWithOut->getMax());
 
                 } else {
 
                     // ถ้าซ้ำกันอีก ให้กลับไปดูที่ค่ารับเข้าในแต่ละรอบ
-                    echo '<h4>ซ้ำกันแล้ว</h4>';
 
                     $this->second->setFirstData($this->inputDS);
                     $this->second->setBlock($this->block);
                     $this->second->findMinValue($this->positionMinZero);
 
-
-
                     // ตรวจสอบว่าเหลือ 2 ค่าหรือไม่
                     if ($this->block->isTwoValue($this->row, $this->column)) {
-                        echo '<h4>ตรวจสอบว่าเหลือ 2 ค่าหรือไม่</h4>';
 
                         $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMin());
 
                     } else {
+
                         // ตรวจสอบค่ารับเข้าในแต่ละรอบซ้ำกันหรือไม่
-                        echo '<h4>ยังเหลือมากกว่า 2 ค่า</h4>';
                         $this->positionMinZero = $this->second->getPositionNotTwo($this->positionMinZero);
+
                     }
                 }
-
-
-                // คือค่าเพื่อลบ supply กับ demand
-                $this->supplyAndDemand();
-
-            } else {
-                echo '<h4># Not Duplicate Value</h4>';
-                $this->supplyAndDemand();
             }
 
-            echo '<hr>';
+            // คือค่าเพื่อลบ supply กับ demand
+            $this->supplyAndDemand();
+
         }
 
-//        return $this;
         return $this->output;
     }
 
 
     private function supplyAndDemand()
     {
-        echo '[ '.$this->positionMinZero["row"]. ':'.$this->positionMinZero["column"].' ]';
         // ถ้ามีแค่ 1 ค่า ทำในนี้
         // คือค่าเพื่อลบ supply กับ demand
         $this->select->setPositionMinZero($this->positionMinZero);
@@ -217,12 +167,6 @@ echo '<br>';
         $this->select->setBlock($this->block);
         $this->output = $this->select->process($this->output);
 
-        $this->show->show('output ', $this->output);
-        $this->show->show('output show ', $this->outputDS);
-        $this->show->show('supply ', $this->DeAndSup->getSupply());
-        $this->show->show('demand ', $this->DeAndSup->getDemand());
-        $this->show->show('do not think row ', $this->block->getRowBlock());
-        $this->show->show('do not think column ', $this->block->getColumnBlock());
     }
 
 }

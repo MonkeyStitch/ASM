@@ -39,16 +39,6 @@ class CheckZero
 
     public function isCheck() {
         $this->process = Library::processSubArr($this->arr, $this->block);
-        $show = new OutputMyArrays();
-
-        echo '<h4>matrix</h4>';
-//        $show->show('matrix', $this->process);
-        print_r($this->process);
-
-        echo '*** ';
-        var_dump($this->PRow());
-        echo '*** ';
-        var_dump($this->PColumn());
 
 
         return $this->isZeroAll();
