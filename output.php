@@ -15,31 +15,48 @@
 <body>
 
 <?php
-
+include(__DIR__ . '/language.php');
 include_once (__DIR__.'/process/auto_load.php');
-//include_once (__DIR__.'/vendor/auto_load.php');
-//include_once (__DIR__.'/ProcessASMold.php');
-include_once (__DIR__.'/Process1.php');
-include_once (__DIR__.'/vendor/OutputMyArrays.php');
-
-//error_reporting(1);
 
 $supply = $_POST['supply'];
 $demand = $_POST['demand'];
-//$process = new ProcessASMold($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
-//$process = new Process1($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
-//$process = new TheNewProcessASM($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
+
 $process = new ProcessASM($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
 
 $show = $process->output();
-//$process1->output();
+
 
 ?>
 
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">ASM Method</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Thai</a></li>
+                <li><a href="#">Eng</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
 <div class="container">
+
     <br>
     <div class="text-center">
-        <p style="font-size: 24px; font-weight: bold;">ผลลัพธ์จากการคำนวณ</p>
+        <p style="font-size: 24px; font-weight: bold;"><?=$lang->getValue('output_result')?></p>
 
         <hr>
 
@@ -94,7 +111,7 @@ $show = $process->output();
                             if ($j === 0)
                             {
                                 // คอลัมน์แรก
-                                echo '<th class="text-center active">hello '.$sumProduct.'</th>';
+                                echo '<th class="text-center active"> '.$lang->getValue('output_total'). ' = '.$sumProduct.'</th>';
                             }
                             else if ($j === ($column + 1))
                             {
@@ -175,7 +192,7 @@ $show = $process->output();
     <div class="alert alert-info" role="alert">
         <table width="100%">
             <tr>
-                <td>#</td>
+                <td><?=$lang->getValue('output_optimal')?></td>
                 <td>= &nbsp;<?=$sumProductStr?></td>
             </tr>
             <tr>
@@ -186,6 +203,8 @@ $show = $process->output();
     </div>
     <hr>
 
+
+    <h4><?=$lang->getValue('output_transpostation')?></h4>
 
     <table class="table-hover">
         <?PHP

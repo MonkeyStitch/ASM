@@ -9,7 +9,6 @@ class ProcessASM
     private $inputDS = [];
     private $outputDS = [];
     private $output = [];
-    private $show;
 
     private $block;
     private $DeAndSup;
@@ -41,7 +40,6 @@ class ProcessASM
         $this->inputDS = $inputDS;
         $this->outputDS = $inputDS;
 
-        $this->show = new OutputMyArrays();
         $this->block = new BlockRCClass([],[]);
 
         $this->DeAndSup = new DemandAndSupply($demand, $supply);

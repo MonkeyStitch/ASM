@@ -1,6 +1,7 @@
 <?php
 
 
+include (__DIR__ . '/OutputMyArrays.php');
 include (__DIR__ . '/blockRC.interface.php');
 include (__DIR__ . '/Library.class.php');
 include(__DIR__ . '/transpose.class.php');

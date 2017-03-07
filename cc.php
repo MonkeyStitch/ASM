@@ -13,12 +13,14 @@
 
 </head>
 <body>
-
+<?php
+include(__DIR__ . '/language.php');
+?>
 <div class="container">
 
     <br>
     <div class="text-center">
-        <p style="font-size: 24px; font-weight: bold;">กรุณากรองข้อมูลที่กำหนด</p>
+        <p style="font-size: 24px; font-weight: bold;"><?=$lang->getValue('cc_text_center') ?></p>
 
         <hr>
 
@@ -133,7 +135,7 @@
                 <input type="hidden" name="row" value="<?php echo $row ?>">
                 <input type="hidden" name="column" value="<?php echo $column ?>">
 
-                <button type="submit" class="btn btn-primary">ตกลง</button>
+                <button type="submit" class="btn btn-primary"><?=$lang->getValue('cc_ok') ?></button>
             </div>
         </form>
 
