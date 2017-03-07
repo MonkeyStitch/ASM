@@ -9,6 +9,7 @@ class MinDelete
     private $block;
     private $minRowArr;
     private $minColumnArr;
+    private $show;
 
     public function __construct($arr, BlockRCClass $blockRCClass)
     {
@@ -16,7 +17,17 @@ class MinDelete
         $this->row = count($arr);
         $this->column = count($arr[0]);
         $this->block = $blockRCClass;
+        $this->show = new OutputMyArrays();
     }
+
+    /**
+     * @param mixed $arr
+     */
+    public function setArr($arr)
+    {
+        $this->arr = $arr;
+    }
+
 
 
     public function getOutput() {
@@ -24,11 +35,16 @@ class MinDelete
 
         // row
         $this->minValueRow();
+        $this->show->show('min value : row ', $this->minRowArr);
         $this->deleteValue($this->minRowArr);
+        $this->show->show('delete value : row ', $this->arr);
 
         // column
         $this->minValueColumn();
+        $this->show->show('min value : col ', $this->minColumnArr);
         $this->deleteValue($this->minColumnArr, false);
+        $this->show->show('delete value : col ', $this->arr);
+
 
         return $this->arr;
     }

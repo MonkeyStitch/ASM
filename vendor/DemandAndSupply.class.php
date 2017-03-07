@@ -37,6 +37,26 @@ class DemandAndSupply
         return $this->supply[$index];
     }
 
+    public function findRow($value)
+    {
+        foreach ($this->supply as $sup) {
+            if ($value === $sup) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function findColumn($value)
+    {
+        foreach ($this->demand as $de) {
+            if ($value === $de) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param mixed $demand
      */

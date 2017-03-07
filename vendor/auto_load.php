@@ -16,3 +16,4 @@ include (__DIR__ . '/SecondDuplicateValue.class.php');
 include (__DIR__ . '/DemandAndSupply.class.php');
 include (__DIR__ . '/ProcessPositionSelect.class.php');
 include (__DIR__ . '/TheNewProcessASM.php');
+include (__DIR__ . '/checkZero.class.php');

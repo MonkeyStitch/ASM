@@ -35,8 +35,11 @@ class FindZero
     {
         $this->arr = $arr;
         $this->arrTranspose = Transpose::transpose($arr);
-        $this->row = count($arr);
-        $this->column = count($arr[0]);
+
+        if ($this->row === null || $this->column === null) {
+            $this->row = count($arr);
+            $this->column = count($arr[0]);
+        }
     }
 
     /**
@@ -46,7 +49,6 @@ class FindZero
     {
         $this->block = $block;
     }
-
 
 
     /**

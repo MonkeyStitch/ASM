@@ -34,6 +34,7 @@ class CheckSumValue
 
     public function isZeroValueMinMoreFirst() {
         $min = @min($this->zeroValueArray);
+        echo '<h4>min value : '. $min . '</h4>';
         $countValue = array_count_values($this->zeroValueArray);
 
         // หาตำแหนงที่น้อยที่สุดจากตำแหน่งที่มี 0 และ เก็บค่าตำแหน่งไว้

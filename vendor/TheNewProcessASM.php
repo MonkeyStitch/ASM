@@ -7,13 +7,13 @@ class TheNewProcessASM
     private $column = 0;
 
     private $inputDS = [];
-    private $minDS = [];
     private $outputDS = [];
     private $output = [];
     private $show;
 
     private $block;
     private $DeAndSup;
+    private $checkZero;
     private $minDelete;
     private $sum;
     private $checkSum;
@@ -44,12 +44,15 @@ class TheNewProcessASM
         $this->column = $column;
 
         $this->inputDS = $inputDS;
+        $this->outputDS = $inputDS;
 
         $this->show = new OutputMyArrays();
         $this->block = new BlockRCClass([],[]);
 
         $this->DeAndSup = new DemandAndSupply($demand, $supply);
-        $this->minDelete = new MinDelete($this->inputDS, $this->block);
+        $this->minDelete = new MinDelete($this->outputDS, $this->block);
+
+        $this->checkZero = new CheckZero(null, null);
 
         $this->find = new FindZero(null, null);
         $this->sum = new SumZero(null, null);
@@ -64,11 +67,17 @@ class TheNewProcessASM
     }
 
 
+    private function clear() {
+        $this->zeroValueArray = [];
+        $this->positionMinZero = []; // row => 0, column => 0
+
+    }
+
     public function output() {
 
 
 //        while (!$this->DeAndSup->isDemandOrSupplyEqualZero()) {
-       for ($i = 1; $i <= 2; $i++) {
+       for ($i = 1; $i <= 3; $i++) {
             echo '<h2>'.$i.'</h2>';
 
             echo 'sum->demand :: '.array_sum($this->DeAndSup->getDemand()) . ' === 0  := ';
@@ -84,14 +93,25 @@ class TheNewProcessASM
            $this->clear();
 
            // show
-            $this->show->show('input ', $this->inputDS);
-            $this->show->show('supply ', $this->DeAndSup->getSupply());
-            $this->show->show('demand ', $this->DeAndSup->getDemand());
+           $this->show->show('supply ', $this->DeAndSup->getSupply());
+           $this->show->show('demand ', $this->DeAndSup->getDemand());
+           $this->show->show('input ', $this->outputDS);
 
 
-           // ฟังชั่น ลบข้อมูล จากการหาค่าน้อยสุดในแต่ละแถว และคอลัมน์
-           $this->outputDS = $this->minDelete->getOutput();
-           $this->show->show('output delete column ', $this->outputDS);
+           // set value in CheckZero
+           $this->checkZero->setArr($this->outputDS);
+           $this->checkZero->setBlock($this->block);
+
+           // check zero if not zero all
+            if (!$this->checkZero->isCheck()) {
+                echo '<br> check zero all is false';
+
+                // clear value
+                $this->minDelete->setArr($this->outputDS);
+
+                // ฟังชั่น ลบข้อมูล จากการหาค่าน้อยสุดในแต่ละแถว และคอลัมน์
+                $this->outputDS = $this->minDelete->getOutput();
+            }
 
             // ตำแหน่งของ 0
            $this->find->setArr($this->outputDS);
@@ -105,11 +125,12 @@ class TheNewProcessASM
             $this->show->show('count zero : col ',$this->find->count('column'));
 
 
-           // รวมผล 0 จาก แถวและคอลัมน์
-           $this->show->show('count zero : col ',$this->outputDS);
+           $this->show->show('delete value (old):  ',$this->outputDS);
 
+           // รวมผล 0 จาก แถวและคอลัมน์
            $this->sum->setArr($this->outputDS);
            $this->sum->setFindZero($this->find);
+
            $sumZero = $this->sum->getSumOutput();
            $this->show->show('sum zero : ',$sumZero);
 
@@ -117,8 +138,11 @@ class TheNewProcessASM
            $this->checkSum->setSumZero($this->sum);
            $this->checkSum->setFindZero($this->find);
 
+           $checkValue = $this->checkSum->isZeroValueMinMoreFirst();
+           $this->positionMinZero = $this->checkSum->getPositionMinZero();
+
             // เช็คค่าที่บวกมีค่าที่ซ้ำหรือไม่
-            if ($this->checkSum->isZeroValueMinMoreFirst()) {
+            if ($checkValue) {
                 // ถ้ามากกว่า 1 ตัวทำในฟังชั่นนี้
                 echo '<h4>มีค่าซ้ำ</h4>';
 
@@ -185,6 +209,8 @@ class TheNewProcessASM
                 $this->output = $this->select->process($this->output);
 
                 $this->show->show('output ', $this->output);
+                $this->show->show('output show ', $this->outputDS);
+
                 $this->show->show('supply ', $this->DeAndSup->getSupply());
                 $this->show->show('demand ', $this->DeAndSup->getDemand());
                 $this->show->show('do not think row ', $this->block->getRowBlock());
@@ -201,6 +227,7 @@ class TheNewProcessASM
                 $this->output = $this->select->process($this->output);
 
                 $this->show->show('output ', $this->output);
+                $this->show->show('output show ', $this->outputDS);
                 $this->show->show('supply ', $this->DeAndSup->getSupply());
                 $this->show->show('demand ', $this->DeAndSup->getDemand());
                 $this->show->show('do not think row ', $this->block->getRowBlock());
@@ -212,19 +239,6 @@ class TheNewProcessASM
 
 //        return $this;
         return $this->output;
-    }
-
-
-
-    private function clear() {
-        $this->outputDS = $this->minDS;
-        $this->positionZero = [];
-        $this->positionZeroTranspose = [];
-        $this->countZeroRow = 0;
-        $this->countZeroColumn = 0;
-        $this->zeroValueArray = [];
-        $this->positionMinZero = []; // row => 0, column => 0
-
     }
 
 

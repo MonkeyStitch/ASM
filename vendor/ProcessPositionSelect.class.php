@@ -65,6 +65,7 @@ class ProcessPositionSelect
 
             // แถว หรือ คอลัมน์ ใดที่เป็น 0 จะไม่นำมาคิดต่อไป
             $this->block->addColumn($this->c);
+            $this->addRowCol($this->r, $this->c);
         } else {
             // demand > supply
             echo ' : false';
@@ -76,11 +77,25 @@ class ProcessPositionSelect
 
             // แถว หรือ คอลัมน์ ใดที่เป็น 0 จะไม่นำมาคิดต่อไป
             $this->block->addRow($this->r);
+            $this->addRowCol($this->r, $this->c);
+
         }
         return $output;
     }
 
     private function isSupplyOverDemand() {
         return $this->dm->getSupply($this->r) > $this->dm->getDemand($this->c);
+    }
+
+    private function addRowCol($row, $column) {
+        // row is supply
+        if ($this->dm->findRow($row)) {
+            $this->block->addRow($row);
+        }
+
+        // column is demand
+        if ($this->dm->findRow($column)) {
+            $this->block->addRow($column);
+        }
     }
 }

@@ -10,13 +10,35 @@ class CheckZero
     private $block;
 
 
-    public function __construct(array $arr = array(),  BlockRCClass $blockRCClass)
+    public function __construct(array $arr = null,  BlockRCClass $blockRCClass = null)
     {
-        $this->arr = $arr;
-        $this->block = $blockRCClass;
+        if ($arr !== null) {
+            $this->arr = $arr;
+        }
+        if ($blockRCClass !== null) {
+            $this->block = $blockRCClass;
+        }
     }
 
-    public function get() {
+    /**
+     * @param array $arr
+     */
+    public function setArr($arr)
+    {
+        $this->arr = $arr;
+    }
+
+    /**
+     * @param BlockRCClass $block
+     */
+    public function setBlock($block)
+    {
+        $this->block = $block;
+    }
+
+
+
+    public function isCheck() {
         $this->process();
         return $this->isZeroAll();
     }
@@ -49,43 +71,32 @@ class CheckZero
 
     // true is 0
     private function process() {
+        $this->rowArr = array();
+        $this->colArr = array();
 
-        foreach($this->arr as $item => $value) {
-
-
-            foreach ($value as $item2 => $value2) {
-
-                if (!in_array($item, $this->block->getRowBlock(), true) && !in_array($item2, $this->block->getColumnBlock(), true)) {
-
-                    if ($item2 === 0) {
-                        // set default value : row
-                        $this->rowArr[$item] = false;
-                    }
-
-                    if ($item === 0) {
-                        // set default value : column
-                        $this->colArr[$item2] = false;
-                    }
+        foreach ($this->arr as $item => $value) {
+            if (@min($value) === 0) {
+                $this->rowArr[$item] = true;
+            } else {
+                $this->rowArr[$item] = false;
+            }
+        }
+        unset($item, $value);
 
 
-                    // row
-                    if (!$this->rowArr[$item]){
-                        $this->rowArr[$item] = ($value2 === 0) ;
-                    }
-
-                    // col
-                    if (!$this->colArr[$item2]) {
-                        $this->colArr[$item2] = ($value2 === 0);
-                    }
-                }
+        foreach (Transpose::transpose($this->arr) as $item => $value) {
+            if (@min($value) === 0) {
+                $this->colArr[$item] = true;
+            } else {
+                $this->colArr[$item] = false;
 
             }
-
         }
+        unset($item, $value);
     }
 
     private function isZeroAll() {
-        return !in_array(false, $this->rowArr, true) && !in_array(false, $this->colArr, true);
+        return !(in_array(false, $this->rowArr, true) && in_array(false, $this->colArr, true));
     }
 
 }

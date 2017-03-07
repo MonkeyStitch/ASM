@@ -49,12 +49,13 @@ class SumZero
     }
 
 
-
     public function getSumValueArr(){
         return $this->zeroValueArray;
     }
 
+
     public function getSumOutput() {
+        $this->zeroValueArray = [];
         $begin = 0;
         for ($i = 0; $i < $this->row; $i++)
         {
