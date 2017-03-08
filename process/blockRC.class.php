@@ -60,6 +60,7 @@ class BlockRCClass implements BlockRC
     }
 
     public function isTwoValue($row, $column) {
-        return ($row - count($this->rowBlock) === 2) && ($column - count($this->columnBlock) === 1);
+        return (($row - count($this->rowBlock) === 2) && ($column - count($this->columnBlock) === 1)) || (($row - count($this->rowBlock) === 1) && ($column - count($this->columnBlock) === 2));
+
     }
 }

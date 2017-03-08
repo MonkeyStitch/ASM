@@ -182,8 +182,8 @@ echo '<br>';
 
                         $this->show->show('position min array before', $this->positionMinZero);
 
-                        $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMin());
-                        $this->show->show('position min array after', $this->positionMinZero);
+                        $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMinIndex());
+
 
                     } else {
                         // ตรวจสอบค่ารับเข้าในแต่ละรอบซ้ำกันหรือไม่

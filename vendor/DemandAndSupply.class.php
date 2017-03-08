@@ -86,11 +86,33 @@ class DemandAndSupply
 
         foreach ($this->supply as $item => $value) {
             $bool &= $value > $this->sumDemand;
-            if ($value > $this->sumDemand) {
-                $this->position = $item;
-            }
+
         }
         return $bool;
+    }
+
+
+    private function checkSupplyHasTwo()
+    {
+//        echo 'count :: Supply > demand<br>';
+        $start = 0;
+        foreach ($this->supply as $item => $value) {
+            if ($value > 0) {
+                $start++;
+            }
+        }
+        return $start === 2;
+    }
+
+    private function checkDemandHasTwo(){
+//        echo 'count :: Supply < demand<br>';
+        $start = 0;
+        foreach ($this->demand as $item => $value) {
+            if ($value > 0) {
+                $start++;
+            }
+        }
+        return $start === 2;
     }
 
     public function isDemandOrSupplyEqualZero() {
@@ -103,18 +125,29 @@ class DemandAndSupply
     public function process($positionMinZero, $min) {
         $this->sumDemand();
 
-        if ($this->checkSupplyMoreDemand()) {
-            // yes จะดูที่ค่า input แรก
-            $positionMinZero = $positionMinZero[$min];
-        } else {
-            // no เลือกตำแหน่งที่ supply > demand
-            foreach ($positionMinZero as $item => $value) {
-                if ($value['row'] === $this->position) {
-                    $positionMinZero = $positionMinZero[$item];
-                }
-            }
-        }
+//        if ($this->checkSupplyHasTwo()){
 
+            // yes จะดูที่ค่า input แรก
+            echo 'yes จะดูที่ค่า input แรก';
+            echo '<br>min index : ' . $min;
+
+            $positionMinZero = $positionMinZero[$min];
+
+//        }
+
+
+//        if ($this->checkDemandHasTwo()) {
+            // no เลือกตำแหน่งที่ supply > demand
+//            echo 'no เลือกตำแหน่งที่ supply > demand';
+
+//            foreach ($positionMinZero as $item => $value) {
+//                if ($value['row'] == $this->position) {
+//                    $positionMinZero = $positionMinZero[$item];
+//                }
+//            }
+//        }
+
+        echo '<br>';
         return $positionMinZero;
     }
 }

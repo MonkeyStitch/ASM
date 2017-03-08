@@ -136,7 +136,7 @@ class ProcessASM
                     // ตรวจสอบว่าเหลือ 2 ค่าหรือไม่
                     if ($this->block->isTwoValue($this->row, $this->column)) {
 
-                        $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMin());
+                        $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMinIndex());
 
                     } else {
 
