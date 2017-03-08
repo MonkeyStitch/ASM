@@ -180,7 +180,10 @@ echo '<br>';
                     if ($this->block->isTwoValue($this->row, $this->column)) {
                         echo '<h4>เหลือ 2 ค่า</h4>';
 
+                        $this->show->show('position min array before', $this->positionMinZero);
+
                         $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMin());
+                        $this->show->show('position min array after', $this->positionMinZero);
 
                     } else {
                         // ตรวจสอบค่ารับเข้าในแต่ละรอบซ้ำกันหรือไม่

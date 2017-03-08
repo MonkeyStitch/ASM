@@ -102,6 +102,7 @@ class DemandAndSupply
 
     public function process($positionMinZero, $min) {
         $this->sumDemand();
+
         if ($this->checkSupplyMoreDemand()) {
             // yes จะดูที่ค่า input แรก
             $positionMinZero = $positionMinZero[$min];
