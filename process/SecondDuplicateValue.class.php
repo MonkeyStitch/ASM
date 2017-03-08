@@ -43,6 +43,8 @@ class SecondDuplicateValue
 
 
     public function findMinValue($positionDuplicate) {
+        $this->minIndex = 0;
+
         $minValueFirst = $this->firstData[$positionDuplicate[0]['row']][$positionDuplicate[0]['column']];
         $count = count($positionDuplicate);
         $mArr = array();
@@ -73,7 +75,7 @@ class SecondDuplicateValue
 
 
     public function getPositionNotTwo($positionMinZero) {
-        if (array_count_values($this->getMinArr())[$this->getMin()] === 1) {
+        if (array_count_values($this->getMinArr())[$this->getMin()] == 1) {
             // ไม่ซ้ำกัน
             $positionMinZero = $positionMinZero[$this->getMinIndex()];
 

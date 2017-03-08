@@ -1,7 +1,7 @@
 <?php
 
 
-class TheNewProcessASM
+class ProcessASM
 {
     private $row = 0;
     private $column = 0;
@@ -176,10 +176,9 @@ echo '<br>';
                     $this->second->findMinValue($this->positionMinZero);
 
 
-
                     // ตรวจสอบว่าเหลือ 2 ค่าหรือไม่
                     if ($this->block->isTwoValue($this->row, $this->column)) {
-                        echo '<h4>ตรวจสอบว่าเหลือ 2 ค่าหรือไม่</h4>';
+                        echo '<h4>เหลือ 2 ค่า</h4>';
 
                         $this->positionMinZero = $this->DeAndSup->process($this->positionMinZero, $this->second->getMin());
 

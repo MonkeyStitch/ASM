@@ -17,6 +17,7 @@
 <?php
 include(__DIR__ . '/language.php');
 include_once (__DIR__.'/process/auto_load.php');
+//include_once (__DIR__.'/vendor/auto_load.php');
 
 $supply = $_POST['supply'];
 $demand = $_POST['demand'];

@@ -43,6 +43,7 @@ class SecondDuplicateValue
 
 
     public function findMinValue($positionDuplicate) {
+        $this->minIndex = 0;
         $minValueFirst = $this->firstData[$positionDuplicate[0]['row']][$positionDuplicate[0]['column']];
         $count = count($positionDuplicate);
         $mArr = array();
@@ -53,7 +54,6 @@ class SecondDuplicateValue
             }
             $mArr[] = $this->firstData[$positionDuplicate[$i]['row']][$positionDuplicate[$i]['column']];
         }
-
         $this->minValueArr = $mArr;
     }
 

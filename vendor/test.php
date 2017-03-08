@@ -1,19 +1,31 @@
 <?php
-
+/*
 $arr = [
     [9, 12, 9, 6, 9, 10],
     [7, 3, 7, 7, 5, 5],
     [6,5,9,11,3,11],
     [6,8,11,2,2,10]
 ];
+
 $demand = [4,4,6,2,4,2];
 $supply = [5,6,2,9];
+*/
+$arr = [
+    [3, 6, 6, 15],
+    [9, 15, 6, 12],
+    [12, 3, 9, 9],
 
+];
+$demand = [120, 60, 150, 90];
+$supply = [150, 90, 180];
+
+$row = count($arr);
+$column = count($arr[0]);
 
 include_once (__DIR__.'/auto_load.php');
 
 echo '<pre>';
-$process = new TheNewProcessASM(4, 6, $demand, $supply, $arr);
+$process = new ProcessASM($row, $column, $demand, $supply, $arr);
 
 $process->output();
 
