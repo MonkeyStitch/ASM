@@ -24,9 +24,15 @@ class Lang
      */
     public function setPath($path)
     {
-        $this->path = $path;
-//        var_dump($this->lang);
-        $this->value = include($this->path . '/'. $this->lang . '/textarray.php');
+        if ($path !== null || $path !== '') {
+            $this->path = $path;
+        } else {
+            $this->path = '';
+        }
+
+
+        $this->setValue();
+
     }
 
     /**
@@ -43,26 +49,57 @@ class Lang
     public function setLang($lang)
     {
         $this->lang = $lang;
+        $this->setValue();
     }
 
     public function setLangThai()
     {
         $this->lang = 'th';
+        $this->setValue();
     }
 
     public function setLangEng()
     {
         $this->lang = 'en';
+        $this->setValue();
     }
 
 
     public function getValue($index)
     {
+        $this->setValue();
         return $this->value[$index];
     }
 
     public function getValues()
     {
+        $this->setValue();
         return $this->value;
     }
+
+    public function makeSession()
+    {
+        $_SESSION['lang'] = $this->lang;
+        $this->setValue();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        return $this->path . '/'. $this->lang . '/textarray.php';
+    }
+
+
+    private function setValue()
+    {
+        if (isset($_SESSION['lang'])) {
+            $this->value = include($this->path . '/'. $_SESSION['lang'] . '/textarray.php');
+        } else {
+            $this->value = include($this->path . '/'. $this->lang . '/textarray.php');
+        }
+    }
+
+
 }

@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    unset($_SESSION['row'],$_SESSION['column'],$_SESSION['sd'], $_SESSION['sumProduct'], $_SESSION['sumProductStr'], $_SESSION['supply'], $_SESSION['demand'], $_SESSION['output']);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>ASM Method</title>
+    <title><?=$lang->getValue('page_index')?></title>
 
     <!-- Fonts -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -29,7 +34,7 @@ include(__DIR__ . '/language.php');
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">ASM Method</a>
+            <a class="navbar-brand" href="#"><?=$lang->getValue('brand')?></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -72,5 +77,13 @@ include(__DIR__ . '/language.php');
         </form>
     </div>
 
+
+<script src="lib/jQuery/jquery.min.js"></script>
+<script>
+    $('a').click(function(){
+        console.log('click');
+        window.location.reload();
+    });
+</script>
 </body>
 </html>

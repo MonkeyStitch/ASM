@@ -1,3 +1,8 @@
+<?php
+    session_start();
+include(__DIR__ . '/language.php');
+include_once (__DIR__.'/process/auto_load.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Output ASM Method</title>
+    <title><?=$lang->getValue('page_output')?></title>
 
     <!-- Fonts -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -15,16 +20,65 @@
 <body>
 
 <?php
-include(__DIR__ . '/language.php');
-include_once (__DIR__.'/process/auto_load.php');
+
 //include_once (__DIR__.'/vendor/auto_load.php');
 
-$supply = $_POST['supply'];
-$demand = $_POST['demand'];
 
-$process = new ProcessASM($_POST['row'], $_POST['column'], $demand, $supply, $_POST['sd']);
+if (isset($_SESSION['output']) && isset($_SESSION['row'] )
+    && isset($_SESSION['column']) && isset($_SESSION['sd'])
+    && isset($_SESSION['sumProduct']) && isset($_SESSION['sumProductStr'])
+    && isset($_SESSION['supply']) && isset($_SESSION['demand'])) {
+    $row = $_SESSION['row'];
+    $column = $_SESSION['column'];
+    $sd = $_SESSION['sd'];
+    $sumProduct = $_SESSION['sumProduct'];
+    $sumProductStr = $_SESSION['sumProductStr'];
+    $supply = $_SESSION['supply'];
+    $demand = $_SESSION['demand'];
+    $show = $_SESSION['output'];
+} else {
+    if (!isset($_POST['row']) && !isset($_POST['column']) && !isset($_POST['sd'])) {
+        header('location: index.php');
+    }
 
-$show = $process->output();
+    $row = $_POST['row'];
+    $column = $_POST['column'];
+    $sd = $_POST['sd'];
+
+    $sumProduct = 0;
+    $sumProductStr = '';
+
+    $supply = $_POST['supply'];
+    $demand = $_POST['demand'];
+
+    $process = new ProcessASM($row, $column, $demand, $supply, $sd);
+
+    $show = $process->output();
+
+    // คำนวณ
+    $count = 0;
+    foreach ($show as $item => $value) {
+        foreach ($value as $item2 => $value2) {
+            if ($value2 !== 0) {
+                if ($count !== 0) {
+                    $sumProductStr .= '+ ';
+                }
+                $count++;
+                $val = $sd[$item][$item2];
+                $sumProduct += $value2 * $val;
+                $sumProductStr .= "($value2 * $val) ";
+            }
+        }
+    }
+
+
+    $_SESSION['sd'] = $sd;
+    $_SESSION['sumProduct'] = $sumProduct;
+    $_SESSION['sumProductStr'] = $sumProductStr;
+    $_SESSION['supply'] = $supply;
+    $_SESSION['demand'] = $demand;
+    $_SESSION['output'] = $show;
+}
 
 
 ?>
@@ -39,14 +93,14 @@ $show = $process->output();
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">ASM Method</a>
+            <a class="navbar-brand" href="#"><?=$lang->getValue('brand')?></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Thai</a></li>
-                <li><a href="#">Eng</a></li>
+                <li><a href="output.php?language=th">Thai</a></li>
+                <li><a href="output.php?language=en">Eng</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -65,39 +119,6 @@ $show = $process->output();
             <table class="table table-bordered table-hover">
 
                 <?php
-                if (!isset($_POST['row']) && !isset($_POST['column']) && !isset($_POST['sd'])) {
-                    header('location: index.php');
-                }
-
-                $row = $_POST['row'];
-                $column = $_POST['column'];
-                $sd = $_POST['sd'];
-
-                $sumProduct = 0;
-                $sumProductStr = '';
-
-                // คำนวณ
-                $count = 0;
-                foreach ($show as $item => $value) {
-                    foreach ($value as $item2 => $value2) {
-                        if ($value2 !== 0) {
-                            if ($count !== 0) {
-                                $sumProductStr .= '+ ';
-                            }
-                            $count++;
-                            $val = $sd[$item][$item2];
-                            $sumProduct += $value2 * $val;
-                            $sumProductStr .= "($value2 * $val) ";
-                        }
-                    }
-                }
-
-
-                // check row and column <= 10
-                if ($row > 10 || $column > 10)
-                {
-                    header('location: index.php');
-                }
 
                 // row
                 for ($i = 0; $i < $row + 2; $i++)
@@ -117,7 +138,7 @@ $show = $process->output();
                             else if ($j === ($column + 1))
                             {
                                 // คอลัมน์สุดท้าย
-                                echo '<th class="text-center success">Supply</th>';
+                                echo '<th class="text-center success">'.$lang->getValue('supply').'</th>';
                             }
                             else
                             {
@@ -163,7 +184,7 @@ $show = $process->output();
                             if ($j === 0)
                             {
                                 // คอลัมน์แรก
-                                echo '<th class="text-center success">Demand</th>';
+                                echo '<th class="text-center success">'.$lang->getValue('demand').'</th>';
                             }
                             else if ($j === ($column + 1))
                             {
@@ -198,7 +219,15 @@ $show = $process->output();
             </tr>
             <tr>
                 <td></td>
-                <td>= &nbsp;<?=$sumProduct?>&nbsp; บาท</td>
+                <td>=
+                <?php
+                    if ($lang->getLang() === 'th') {
+                        echo $sumProduct . ' บาท';
+                    } else {
+                        echo '$' . $sumProduct;
+                    }
+                ?>
+                </td>
             </tr>
         </table>
     </div>

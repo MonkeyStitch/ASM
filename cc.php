@@ -1,3 +1,32 @@
+<?php
+    session_start();
+    unset($_SESSION['sd'], $_SESSION['sumProduct'], $_SESSION['sumProductStr'], $_SESSION['supply'], $_SESSION['demand'], $_SESSION['output']);
+
+include(__DIR__ . '/language.php');
+
+
+if (isset($_SESSION['row']) && isset($_SESSION['column'])) {
+        $row = $_SESSION['row'];
+        $column = $_SESSION['column'];
+    } else {
+
+        if ((!isset($_POST['row']) || !isset($_POST['column'])) || ($_POST['row'] == '' || $_POST['column'] == '')) {
+            header('location: index.php');
+        }
+
+        $row = $_POST['row'];
+        $column = $_POST['column'];
+
+        // check row and column <= 10
+        if ($row > 10 || $column > 10)
+        {
+            header('location: index.php');
+        }
+
+        $_SESSION['row'] = $row;
+        $_SESSION['column'] = $column;
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +34,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>ASM Method</title>
+    <title><?=$lang->getValue('page_cc')?></title>
 
     <!-- Fonts -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -13,9 +42,33 @@
 
 </head>
 <body>
-<?php
-include(__DIR__ . '/language.php');
-?>
+
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><?=$lang->getValue('brand')?></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="cc.php?language=th">Thai</a></li>
+                <li><a href="cc.php?language=en">Eng</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
 <div class="container">
 
     <br>
@@ -30,18 +83,6 @@ include(__DIR__ . '/language.php');
 
 
                     <?php
-
-                    if (!isset($_POST['row']) && !isset($_POST['column'])) {
-                        header('location: index.php');
-                    }
-
-                    $row = $_POST['row'];
-                    $column = $_POST['column'];
-                    // check row and column <= 10
-                    if ($row > 10 || $column > 10)
-                    {
-                        header('location: index.php');
-                    }
 
                     // row
                     for ($i = 0; $i < $row + 2; $i++)
@@ -61,7 +102,7 @@ include(__DIR__ . '/language.php');
                                 else if ($j === ($column + 1))
                                 {
                                     // คอลัมน์สุดท้าย
-                                    echo '<th class="text-center success">Supply</th>';
+                                    echo '<th class="text-center success">'.$lang->getValue('supply').'</th>';
                                 }
                                 else
                                 {
@@ -100,7 +141,7 @@ include(__DIR__ . '/language.php');
                                 if ($j === 0)
                                 {
                                     // คอลัมน์แรก
-                                    echo '<th class="text-center success">Demand</th>';
+                                    echo '<th class="text-center success">'.$lang->getValue('demand').'</th>';
                                 }
                                 else if ($j === ($column + 1))
                                 {
