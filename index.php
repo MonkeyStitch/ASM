@@ -1,6 +1,7 @@
 <?php
     session_start();
     unset($_SESSION['row'],$_SESSION['column'],$_SESSION['sd'], $_SESSION['sumProduct'], $_SESSION['sumProductStr'], $_SESSION['supply'], $_SESSION['demand'], $_SESSION['output']);
+    include(__DIR__ . '/language.php');
 ?>
 
 <!DOCTYPE html>
@@ -19,9 +20,6 @@
 </head>
 <body>
 
-<?php
-include(__DIR__ . '/language.php');
-?>
 
 
 <nav class="navbar navbar-default">
